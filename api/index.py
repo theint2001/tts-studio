@@ -13,7 +13,7 @@ class VercelPathFixer:
     """
     ASGI middleware for Vercel Serverless Functions.
     Restores the original request path from the query parameter '__path__'
-    when Vercel rewrites /api/(.*) to /api/index.py.
+    when Vercel rewrites /api/:match* to /api/index.py?__path__=:match*.
     """
     def __init__(self, app):
         self.app = app
@@ -30,6 +30,9 @@ class VercelPathFixer:
                 scope["path"] = f"/api{clean_subpath}"
                 scope["raw_path"] = scope["path"].encode("latin-1")
                 scope["query_string"] = urlencode(params, doseq=True).encode("latin-1")
+            elif scope.get("path") == "/api/index.py":
+                scope["path"] = "/api"
+                scope["raw_path"] = b"/api"
 
         await self.app(scope, receive, send)
 
