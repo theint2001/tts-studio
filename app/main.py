@@ -62,6 +62,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.middleware("http")
+async def vercel_path_middleware(request: Request, call_next):
+    subpath = request.query_params.get("__path__")
+    if subpath:
+        clean_subpath = subpath if subpath.startswith("/") else f"/{subpath}"
+        request.scope["path"] = f"/api{clean_subpath}"
+        request.scope["raw_path"] = request.scope["path"].encode("latin-1")
+    elif request.scope.get("path") == "/api/index.py":
+        request.scope["path"] = "/api"
+        request.scope["raw_path"] = b"/api"
+    return await call_next(request)
+
 # Mount static files
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
@@ -106,12 +118,7 @@ async def serve_index():
 async def custom_404_handler(request: Request, exc: HTTPException):
     return JSONResponse(
         status_code=404,
-        content={
-            "detail": f"Route not found: {request.method} {request.url.path}",
-            "path": request.url.path,
-            "headers": dict(request.headers),
-            "scope_keys": list(request.scope.keys())
-        }
+        content={"detail": "Not Found"}
     )
 
 @app.get("/api")
