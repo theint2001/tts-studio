@@ -108,7 +108,9 @@ async def custom_404_handler(request: Request, exc: HTTPException):
         status_code=404,
         content={
             "detail": f"Route not found: {request.method} {request.url.path}",
-            "path": request.url.path
+            "path": request.url.path,
+            "headers": dict(request.headers),
+            "scope_keys": list(request.scope.keys())
         }
     )
 
