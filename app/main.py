@@ -49,7 +49,8 @@ video_service = VideoService(video_storage_dir=VIDEO_STORAGE_DIR)
 app = FastAPI(
     title="Personal TTS Studio",
     description="Local Text-to-Speech Studio supporting Myanmar Unicode and British English",
-    version="1.0.0"
+    version="1.0.0",
+    redirect_slashes=False
 )
 
 # CORS enabled for local access
@@ -92,11 +93,19 @@ class VideoGenerateRequest(BaseModel):
 
 @app.get("/", response_class=HTMLResponse)
 async def serve_index():
-    index_path = os.path.join(STATIC_DIR, "index.html")
-    if not os.path.exists(index_path):
-        raise HTTPException(status_code=404, detail="Studio frontend not found.")
-    with open(index_path, "r", encoding="utf-8") as f:
-        return HTMLResponse(content=f.read())
+    for p in [
+        os.path.join(STATIC_DIR, "index.html"),
+        os.path.join(BASE_DIR, "public", "index.html")
+    ]:
+        if os.path.exists(p):
+            with open(p, "r", encoding="utf-8") as f:
+                return HTMLResponse(content=f.read())
+    raise HTTPException(status_code=404, detail="Studio frontend not found.")
+
+@app.get("/api")
+@app.get("/api/")
+async def api_health():
+    return {"status": "ok", "service": "TTS Studio API"}
 
 @app.get("/api/voices")
 async def get_voices():

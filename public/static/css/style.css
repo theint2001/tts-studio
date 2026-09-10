@@ -1,0 +1,144 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #f8fafc;
+  color: #0f172a;
+}
+
+/* Crisp Clean Studio Cards */
+.studio-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03), 0 1px 2px -1px rgba(0, 0, 0, 0.02);
+}
+
+/* Sound Waveform Bars matching screenshot */
+.waveform-container {
+  display: flex;
+  align-items: center;
+  gap: 2.5px;
+  height: 28px;
+}
+
+.wave-bar {
+  width: 2.5px;
+  background-color: #93c5fd;
+  border-radius: 2px;
+  transition: height 0.15s ease, background-color 0.15s ease;
+}
+
+.wave-bar.active {
+  background-color: #2563eb;
+}
+
+.playing .wave-bar {
+  animation: wavePulse 1.2s ease-in-out infinite;
+}
+
+@keyframes wavePulse {
+  0%, 100% { transform: scaleY(0.3); }
+  50% { transform: scaleY(1); }
+}
+
+/* Clean Blue Range Sliders */
+input[type="range"] {
+  -webkit-appearance: none;
+  background: #e2e8f0;
+  border-radius: 6px;
+  height: 5px;
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #2563eb;
+  cursor: pointer;
+  border: 2.5px solid #ffffff;
+  box-shadow: 0 1px 3px rgba(37, 99, 235, 0.4);
+  transition: transform 0.1s;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+/* Motion Effect Segmented Control */
+.motion-btn {
+  color: #64748b;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.motion-btn:hover {
+  color: #0f172a;
+}
+
+.motion-btn.active {
+  background-color: #ffffff !important;
+  color: #2563eb !important;
+  font-weight: 600;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.motion-btn.active svg {
+  color: #2563eb !important;
+}
+
+/* Thumbnail Delete Button */
+.thumb-card {
+  position: relative;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.thumb-card:hover {
+  transform: translateY(-1px);
+  border-color: #93c5fd;
+}
+
+.thumb-delete-btn {
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.15s ease;
+}
+
+.thumb-card:hover .thumb-delete-btn {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.2s ease-out forwards;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
