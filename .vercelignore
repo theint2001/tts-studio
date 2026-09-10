@@ -1,0 +1,11 @@
+venv/
+.env*
+storage/audio/
+storage/images/
+storage/video/
+storage/*.db
+tests/
+__pycache__/
+*.pyc
+.git/
+.DS_Store

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TTS Studio - Natural British English Speech</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="bg-[#f8fafc] text-slate-900 h-screen max-h-screen flex flex-col overflow-hidden selection:bg-blue-500 selection:text-white antialiased">
+
+  <!-- Toast Container (Bottom-Right, non-intrusive) -->
+  <div id="toast-container" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none max-w-sm"></div>
+
+  <!-- Ultra-Clean Minimal Header -->
+  <header class="border-b border-slate-200/80 bg-white shrink-0 py-2.5 px-4 sm:px-6">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-xs shadow-blue-500/20 shrink-0">
+          <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 10v4M7 6v12M11 3v18M15 7v10M19 10v4" />
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-bold text-base tracking-tight text-slate-900 leading-none">TTS Studio</h1>
+            <span class="px-1.5 py-0.5 rounded-md text-[10px] font-semibold bg-blue-50 text-blue-600 border border-blue-200">
+              Personal
+            </span>
+          </div>
+          <p class="text-xs text-slate-400 mt-1 leading-none">Natural British English speech, made simple.</p>
+        </div>
+      </div>
+      <div class="text-xs text-slate-400 font-medium">
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-medium">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          Edge Neural Voices Online
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- One-Screen Main Studio Workspace (Pure TTS, Zero Scroll) -->
+  <main class="max-w-7xl mx-auto p-4 flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 w-full min-h-0 overflow-hidden">
+    
+    <!-- LEFT COLUMN: Script, Voice & Adjustments (7 cols) -->
+    <section class="lg:col-span-7 flex flex-col gap-3 min-h-0">
+
+      <!-- 1. Script Box -->
+      <div class="studio-card p-4 flex flex-col flex-1 min-h-0">
+        <div class="flex items-center justify-between mb-2 shrink-0">
+          <div class="flex items-center gap-2">
+            <div class="w-6 h-6 rounded-md bg-blue-50 text-blue-600 flex items-center justify-center">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <h2 class="text-sm font-bold text-slate-900">Script</h2>
+          </div>
+          <button id="btn-clear-text" class="px-2.5 py-1 rounded-md border border-slate-200 hover:bg-slate-50 text-slate-500 text-xs font-medium flex items-center gap-1.5 transition cursor-pointer">
+            <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+            <span>Clear</span>
+          </button>
+        </div>
+
+        <!-- Script Textarea -->
+        <div class="relative flex-1 min-h-0">
+          <textarea 
+            id="narration-text" 
+            class="w-full h-full p-3 text-xs sm:text-sm text-slate-800 bg-slate-50/50 border border-slate-200 rounded-xl focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition resize-none leading-relaxed font-sans"
+            placeholder="Type or paste your British English script here..."
+          >In fifteen eighty-seven, more than one hundred English men, women and children set sail for a new world. Their journey was long and difficult, but it marked the beginning of a new chapter in history.</textarea>
+        </div>
+
+        <!-- Script Footer Stats -->
+        <div class="flex items-center justify-between text-xs text-slate-400 pt-2 shrink-0">
+          <div class="flex items-center gap-3">
+            <span><strong id="stat-chars" class="font-semibold text-slate-700">142</strong> chars</span>
+            <span>•</span>
+            <span><strong id="stat-words" class="font-semibold text-slate-700">27</strong> words</span>
+            <span>•</span>
+            <span>~ <strong id="stat-duration" class="font-semibold text-blue-600">0:14</strong> est. duration</span>
+          </div>
+          <div class="text-[11px] text-slate-400">
+            Natural British phrasing
+          </div>
+        </div>
+
+        <!-- Inline TTS Error Banner -->
+        <div id="tts-error-banner" class="hidden mt-2 p-2.5 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-start gap-2 animate-fade-in shrink-0">
+          <svg class="w-4 h-4 text-rose-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+          </svg>
+          <div class="flex-1">
+            <span id="tts-error-message" class="font-medium"></span>
+          </div>
+          <button id="btn-dismiss-tts-error" type="button" class="text-rose-400 hover:text-rose-600 transition cursor-pointer">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- 2. Voice Selection (4 Voices Grid) -->
+      <div class="studio-card p-3.5 shrink-0">
+        <div class="flex items-center gap-2 mb-2.5">
+          <div class="w-6 h-6 rounded-md bg-blue-50 text-blue-600 flex items-center justify-center">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+            </svg>
+          </div>
+          <h2 class="text-xs font-bold text-slate-900">Voice</h2>
+          <span class="text-[11px] text-slate-400">• British English Neural</span>
+        </div>
+
+        <!-- 4 Voice Cards Grid -->
+        <div id="voice-cards-container" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+          <!-- 1. Sonia -->
+          <div class="voice-card p-2.5 rounded-xl border-2 border-blue-600 bg-blue-50/30 cursor-pointer transition flex items-center gap-2.5 relative shadow-2xs" data-voice="en-GB-SoniaNeural">
+            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&auto=format&fit=crop&q=80" alt="Sonia" class="w-9 h-9 rounded-full object-cover shrink-0 shadow-xs" />
+            <div class="flex-1 min-w-0 pr-3">
+              <h3 class="text-xs font-bold text-slate-900 leading-tight">Sonia</h3>
+              <p class="text-[10px] text-slate-400 font-medium truncate">Warm & natural</p>
+            </div>
+            <div class="radio-indicator absolute top-2 right-2 w-3.5 h-3.5 rounded-full border-2 border-blue-600 bg-blue-600 flex items-center justify-center">
+              <div class="w-1.5 h-1.5 rounded-full bg-white"></div>
+            </div>
+          </div>
+
+          <!-- 2. Ryan -->
+          <div class="voice-card p-2.5 rounded-xl border border-slate-200 bg-white hover:border-slate-300 cursor-pointer transition flex items-center gap-2.5 relative shadow-2xs" data-voice="en-GB-RyanNeural">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80" alt="Ryan" class="w-9 h-9 rounded-full object-cover shrink-0 shadow-xs" />
+            <div class="flex-1 min-w-0 pr-3">
+              <h3 class="text-xs font-bold text-slate-900 leading-tight">Ryan</h3>
+              <p class="text-[10px] text-slate-400 font-medium truncate">Engaging narrator</p>
+            </div>
+            <div class="radio-indicator absolute top-2 right-2 w-3.5 h-3.5 rounded-full border-2 border-slate-300 bg-white"></div>
+          </div>
+
+          <!-- 3. Libby -->
+          <div class="voice-card p-2.5 rounded-xl border border-slate-200 bg-white hover:border-slate-300 cursor-pointer transition flex items-center gap-2.5 relative shadow-2xs" data-voice="en-GB-LibbyNeural">
+            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&auto=format&fit=crop&q=80" alt="Libby" class="w-9 h-9 rounded-full object-cover shrink-0 shadow-xs" />
+            <div class="flex-1 min-w-0 pr-3">
+              <h3 class="text-xs font-bold text-slate-900 leading-tight">Libby</h3>
+              <p class="text-[10px] text-slate-400 font-medium truncate">Bright & friendly</p>
+            </div>
+            <div class="radio-indicator absolute top-2 right-2 w-3.5 h-3.5 rounded-full border-2 border-slate-300 bg-white"></div>
+          </div>
+
+          <!-- 4. Thomas -->
+          <div class="voice-card p-2.5 rounded-xl border border-slate-200 bg-white hover:border-slate-300 cursor-pointer transition flex items-center gap-2.5 relative shadow-2xs" data-voice="en-GB-ThomasNeural">
+            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=80" alt="Thomas" class="w-9 h-9 rounded-full object-cover shrink-0 shadow-xs" />
+            <div class="flex-1 min-w-0 pr-3">
+              <h3 class="text-xs font-bold text-slate-900 leading-tight">Thomas</h3>
+              <p class="text-[10px] text-slate-400 font-medium truncate">Authoritative</p>
+            </div>
+            <div class="radio-indicator absolute top-2 right-2 w-3.5 h-3.5 rounded-full border-2 border-slate-300 bg-white"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Adjustments & Generate Button Combined Card -->
+      <div class="studio-card p-3.5 flex flex-col gap-3 shrink-0">
+        <div class="grid grid-cols-2 gap-4 items-center">
+          <!-- Speed -->
+          <div class="space-y-1">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-semibold text-slate-700">Speed</span>
+              <span id="rate-display" class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 font-mono font-bold text-[11px]">1.0x</span>
+            </div>
+            <input type="range" id="rate-slider" min="-50" max="100" step="5" value="0" class="w-full">
+          </div>
+
+          <!-- Pitch -->
+          <div class="space-y-1">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-semibold text-slate-700">Pitch</span>
+              <span id="pitch-display" class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 font-mono font-bold text-[11px]">0 Hz</span>
+            </div>
+            <input type="range" id="pitch-slider" min="-20" max="20" step="1" value="0" class="w-full">
+          </div>
+        </div>
+
+        <!-- Large Royal Blue Generate Speech Button -->
+        <button 
+          id="btn-synthesize" 
+          class="w-full py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold text-sm flex items-center justify-center gap-2 shadow-xs hover:shadow-blue-500/25 transition group cursor-pointer"
+        >
+          <svg class="w-4 h-4 fill-current group-hover:scale-110 transition-transform" viewBox="0 0 24 24">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+          <span id="btn-synthesize-text">Generate Speech</span>
+          <svg class="w-4 h-4 stroke-current stroke-2 fill-none group-hover:translate-x-0.5 transition-transform" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+          </svg>
+        </button>
+      </div>
+
+    </section>
+
+    <!-- RIGHT COLUMN: Audio Player & Recent History (5 cols) -->
+    <section class="lg:col-span-5 flex flex-col gap-3 min-h-0">
+
+      <!-- 1. Audio Preview Card -->
+      <div class="studio-card p-4 shrink-0">
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-2">
+            <div class="w-6 h-6 rounded-md bg-blue-50 text-blue-600 flex items-center justify-center">
+              <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                <path d="M8 5v14l11-7z"/>
+              </svg>
+            </div>
+            <h2 class="text-xs font-bold text-slate-900">Audio Preview</h2>
+          </div>
+          <span id="audio-total-badge" class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-xs font-mono font-semibold">0:14</span>
+        </div>
+
+        <!-- Hidden Audio Element -->
+        <audio id="main-audio" preload="metadata"></audio>
+
+        <!-- Player Controls Row -->
+        <div class="flex items-center justify-between gap-3 pt-1">
+          <!-- Circular Play Button -->
+          <button id="btn-play-pause" class="w-11 h-11 rounded-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white flex items-center justify-center shadow-sm shrink-0 transition cursor-pointer hover:scale-105">
+            <svg id="icon-play-svg" class="w-4.5 h-4.5 ml-0.5 fill-current" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+            <svg id="icon-pause-svg" class="w-4.5 h-4.5 fill-current hidden" viewBox="0 0 24 24">
+              <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+            </svg>
+          </button>
+
+          <!-- Waveform Visualization & Time -->
+          <div class="flex-1 flex flex-col justify-center px-1">
+            <div id="waveform-visualizer" class="waveform-container mb-1" style="height: 24px;">
+              <div class="wave-bar h-2 active"></div>
+              <div class="wave-bar h-4 active"></div>
+              <div class="wave-bar h-6 active"></div>
+              <div class="wave-bar h-3 active"></div>
+              <div class="wave-bar h-6 active"></div>
+              <div class="wave-bar h-5 active"></div>
+              <div class="wave-bar h-6 active"></div>
+              <div class="wave-bar h-4 active"></div>
+              <div class="wave-bar h-6 active"></div>
+              <div class="wave-bar h-3"></div>
+              <div class="wave-bar h-5"></div>
+              <div class="wave-bar h-2"></div>
+              <div class="wave-bar h-6"></div>
+              <div class="wave-bar h-4"></div>
+              <div class="wave-bar h-5"></div>
+              <div class="wave-bar h-3"></div>
+              <div class="wave-bar h-4"></div>
+              <div class="wave-bar h-6"></div>
+            </div>
+            <div class="text-[11px] font-mono text-slate-500 flex justify-between">
+              <span id="time-display-current">0:00</span>
+              <span>/</span>
+              <span id="time-display-total">0:14</span>
+            </div>
+          </div>
+
+          <!-- Volume Mini Slider -->
+          <div class="flex items-center gap-1.5 text-slate-400">
+            <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+            </svg>
+            <input type="range" id="volume-slider" min="0" max="100" value="100" class="w-12">
+          </div>
+
+          <!-- Download MP3 Pill Button -->
+          <a 
+            id="btn-download-mp3" 
+            href="#" 
+            download="audio.mp3" 
+            class="px-3 py-1.5 rounded-lg border border-blue-200 bg-blue-50/60 hover:bg-blue-100 text-blue-600 text-xs font-semibold flex items-center gap-1.5 transition shrink-0 shadow-2xs"
+          >
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            <span>Download MP3</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- 2. Recent History Card (Fills remaining space comfortably) -->
+      <div id="history-section" class="studio-card p-4 flex flex-col flex-1 min-h-0">
+        <div class="flex items-center justify-between mb-2.5 shrink-0">
+          <div class="flex items-center gap-2">
+            <div class="w-6 h-6 rounded-md bg-blue-50 text-blue-600 flex items-center justify-center">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h2 class="text-xs font-bold text-slate-900">Recent History</h2>
+          </div>
+          <span class="text-[11px] text-slate-400">Audio recordings</span>
+        </div>
+
+        <!-- History Item List -->
+        <div id="history-list" class="space-y-2 flex-1 min-h-0 overflow-y-auto pr-1 scrollbar-thin">
+          <!-- Dynamically populated via app.js -->
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Application Logic -->
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

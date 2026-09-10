@@ -1,0 +1,23 @@
+# Python
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Local Storage
+storage/audio/
+storage/images/
+storage/video/
+storage/*.db
+storage/temp/
+
+# Environment & OS
+.env
+.env.local
+.DS_Store
+Thumbs.db
+
+# Vercel
+.vercel
