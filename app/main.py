@@ -1,8 +1,8 @@
 import os
 import shutil
 from typing import Optional, List
-from fastapi import FastAPI, HTTPException, Query, File, UploadFile
-from fastapi.responses import FileResponse, HTMLResponse
+from fastapi import FastAPI, HTTPException, Query, File, UploadFile, Request
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
@@ -102,12 +102,23 @@ async def serve_index():
                 return HTMLResponse(content=f.read())
     raise HTTPException(status_code=404, detail="Studio frontend not found.")
 
+@app.exception_handler(404)
+async def custom_404_handler(request: Request, exc: HTTPException):
+    return JSONResponse(
+        status_code=404,
+        content={
+            "detail": f"Route not found: {request.method} {request.url.path}",
+            "path": request.url.path
+        }
+    )
+
 @app.get("/api")
 @app.get("/api/")
 async def api_health():
     return {"status": "ok", "service": "TTS Studio API"}
 
 @app.get("/api/voices")
+@app.get("/voices")
 async def get_voices():
     """Retrieve all available voices from registered providers."""
     try:
@@ -117,6 +128,7 @@ async def get_voices():
         raise HTTPException(status_code=500, detail=f"Failed to fetch voices: {str(e)}")
 
 @app.get("/api/presets")
+@app.get("/presets")
 async def get_presets():
     """Retrieve all built-in and user-created presets."""
     try:
@@ -126,6 +138,7 @@ async def get_presets():
         raise HTTPException(status_code=500, detail=f"Failed to fetch presets: {str(e)}")
 
 @app.post("/api/presets")
+@app.post("/presets")
 async def create_preset(payload: PresetCreateRequest):
     """Save a custom voice preset."""
     import uuid
@@ -144,12 +157,14 @@ async def create_preset(payload: PresetCreateRequest):
     return {"message": "Preset saved successfully", "preset": data}
 
 @app.delete("/api/presets/{preset_id}")
+@app.delete("/presets/{preset_id}")
 async def delete_preset(preset_id: str):
     """Delete a custom preset."""
     delete_preset_by_id(preset_id)
     return {"message": "Preset deleted successfully"}
 
 @app.post("/api/synthesize")
+@app.post("/synthesize")
 async def synthesize_speech(payload: SynthesizeRequest):
     """Synthesize speech with long-form chunking and local storage."""
     text = payload.text.strip()
@@ -215,6 +230,7 @@ async def synthesize_speech(payload: SynthesizeRequest):
         raise HTTPException(status_code=500, detail=f"TTS Generation Error: {err_msg}")
 
 @app.get("/api/audio/{filename}")
+@app.get("/audio/{filename}")
 async def get_audio_file(filename: str, download: bool = Query(default=False)):
     """Serve or download generated audio file."""
     # Sanitize filename
@@ -236,6 +252,7 @@ async def get_audio_file(filename: str, download: bool = Query(default=False)):
     )
 
 @app.get("/api/history")
+@app.get("/history")
 async def get_history(
     search: Optional[str] = Query(default=None),
     language: Optional[str] = Query(default=None),
@@ -248,6 +265,7 @@ async def get_history(
     return {"history": items}
 
 @app.delete("/api/history/{item_id}")
+@app.delete("/history/{item_id}")
 async def delete_history(item_id: str):
     """Delete a history record and its associated audio file."""
     filename = delete_history_by_id(item_id)
